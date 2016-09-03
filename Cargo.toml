@@ -1,0 +1,18 @@
+[package]
+name = "slacker"
+version = "0.1.0"
+authors = ["Allen George <allen.george@gmail.com>"]
+build = "build.rs"
+
+[build-dependencies]
+serde_codegen = "0.8"
+
+[dependencies]
+error-chain = "^0.5"
+env_logger = "^0.3"
+hyper = "^0.9"
+log = "^0.3"
+serde = "^0.8"
+serde_json = "^0.8"
+time = "^0.1"
+url = "^1.0"
