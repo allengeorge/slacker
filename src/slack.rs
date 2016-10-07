@@ -87,6 +87,8 @@ impl Slack {
     //
 
     pub fn channels_archive(&self, channel: &ChannelId) -> Result<()> {
+        try!(validate_channel_id(channel));
+
         let mut api_url = try!(self.api_url("channels.archive"));
         api_url.query_pairs_mut().append_pair("channel", channel);
         let api_url = api_url;
@@ -107,6 +109,8 @@ impl Slack {
     }
 
     pub fn channels_info(&self, channel: &ChannelId) -> Result<Channel> {
+        try!(validate_channel_id(channel));
+
         let mut api_url = try!(self.api_url("channels.info"));
         api_url.query_pairs_mut().append_pair("channel", channel);
         let api_url = api_url;
@@ -117,6 +121,9 @@ impl Slack {
     }
 
     pub fn channels_invite(&self, channel: &ChannelId, user: &UserId) -> Result<Channel> {
+        try!(validate_user_id(user));
+        try!(validate_channel_id(channel));
+
         let mut api_url = try!(self.api_url("channels.invite"));
         api_url.query_pairs_mut().append_pair("channel", channel);
         api_url.query_pairs_mut().append_pair("user", user);
@@ -142,6 +149,8 @@ impl Slack {
     }
 
     pub fn channels_leave(&self, channel: &ChannelId) -> Result<()> {
+        try!(validate_channel_id(channel));
+
         let mut api_url = try!(self.api_url("channels.leave"));
         api_url.query_pairs_mut().append_pair("channel", channel);
         let api_url = api_url;
@@ -161,39 +170,105 @@ impl Slack {
         slack_result!(deserialized).map(|d| d.channels)
     }
 
-    pub fn channels_mark(&self) -> Result<()> {
-        unimplemented!()
+    pub fn channels_mark(&self, channel: &ChannelId, timestamp: f64) -> Result<()> {
+        try!(validate_channel_id(channel));
+
+        let mut api_url = try!(self.api_url("channels.mark"));
+        api_url.query_pairs_mut().append_pair("channel", channel);
+        api_url.query_pairs_mut().append_pair("ts", &timestamp.to_string());
+        let api_url = api_url;
+
+        let request = self.client.get(api_url);
+        let deserialized = try!(Slack::send::<ChannelsMarkResponse>(request));
+        slack_result!(deserialized, ())
     }
 
-    pub fn channels_rename(&self) -> Result<()> {
-        unimplemented!()
+    pub fn channels_rename(&self, channel: &ChannelId, new_name: &str) -> Result<()> {
+        try!(validate_channel_id(channel));
+
+        let mut api_url = try!(self.api_url("channels.rename"));
+        api_url.query_pairs_mut().append_pair("channel", channel);
+        api_url.query_pairs_mut().append_pair("name", new_name);
+        let api_url = api_url;
+
+        let request = self.client.get(api_url);
+        let deserialized = try!(Slack::send::<ChannelsRenameResponse>(request));
+        slack_result!(deserialized, ())
     }
 
-    pub fn channels_set_purpose(&self) -> Result<()> {
-        unimplemented!()
+    pub fn channels_set_purpose(&self, channel: &ChannelId, new_purpose: &str) -> Result<()> {
+        try!(validate_channel_id(channel));
+
+        let mut api_url = try!(self.api_url("channels.setPurpose"));
+        api_url.query_pairs_mut().append_pair("channel", channel);
+        api_url.query_pairs_mut().append_pair("purpose", new_purpose);
+        let api_url = api_url;
+
+        let request = self.client.get(api_url);
+        let deserialized = try!(Slack::send::<ChannelsSetPurposeResponse>(request));
+        slack_result!(deserialized, ())
     }
 
-    pub fn channels_set_topic(&self) -> Result<()> {
-        unimplemented!()
+    pub fn channels_set_topic(&self, channel: &ChannelId, new_topic: &str) -> Result<()> {
+        try!(validate_channel_id(channel));
+
+        let mut api_url = try!(self.api_url("channels.setTopic"));
+        api_url.query_pairs_mut().append_pair("channel", channel);
+        api_url.query_pairs_mut().append_pair("topic", new_topic);
+        let api_url = api_url;
+
+        let request = self.client.get(api_url);
+        let deserialized = try!(Slack::send::<ChannelsSetTopicResponse>(request));
+        slack_result!(deserialized, ())
     }
 
-    pub fn channels_unarchive(&self) -> Result<()> {
-        unimplemented!()
+    pub fn channels_unarchive(&self, channel: &ChannelId) -> Result<()> {
+        try!(validate_channel_id(channel));
+
+        let mut api_url = try!(self.api_url("channels.unarchive"));
+        api_url.query_pairs_mut().append_pair("channel", channel);
+        let api_url = api_url;
+
+        let request = self.client.get(api_url);
+        let deserialized = try!(Slack::send::<ChannelsUnarchiveResponse>(request));
+        slack_result!(deserialized, ())
     }
 
     //
     // chat
     //
 
-    pub fn chat_delete(&self) -> Result<()> {
-        unimplemented!()
+    pub fn chat_delete(&self, channel: &ChannelId, message_timestamp: f64, as_user: Option<bool>) -> Result<()> {
+        try!(validate_channel_id(channel));
+
+        let mut api_url = try!(self.api_url("chat.delete"));
+        api_url.query_pairs_mut().append_pair("channel", channel);
+        api_url.query_pairs_mut().append_pair("ts", &message_timestamp.to_string());
+        as_user.map(|b| { api_url.query_pairs_mut().append_pair("as_user", &b.to_string()); () });
+        let api_url = api_url;
+
+        let request = self.client.get(api_url);
+        let deserialized = try!(Slack::send::<ChatDeleteResponse>(request));
+        slack_result!(deserialized, ())
     }
 
-    pub fn chat_me_message(&self) -> Result<()> {
-        unimplemented!()
+    // TODO: allow the user to specify a channel name as well
+    pub fn chat_me_message(&self, channel: &ChannelId, message_text: &str) -> Result<()> {
+        try!(validate_channel_id(channel));
+
+        let mut api_url = try!(self.api_url("chat.meMessage"));
+        api_url.query_pairs_mut().append_pair("channel", channel);
+        api_url.query_pairs_mut().append_pair("text", message_text);
+        let api_url = api_url;
+
+        let request = self.client.get(api_url);
+        let deserialized = try!(Slack::send::<ChatMeMessageResponse>(request));
+        slack_result!(deserialized, ())
     }
 
     pub fn chat_post_message(&self, channel: &ChannelId, message: &Message) -> Result<()> {
+        try!(validate_channel_id(channel));
+
         let mut api_url = try!(self.api_url("chat.postMessage"));
         api_url.query_pairs_mut().append_pair("channel", channel);
         let api_url = api_url;
@@ -311,19 +386,29 @@ impl Slack {
     }
 
     pub fn send<T>(request: RequestBuilder) -> Result<T> where T: Deserialize {
-        request.send().map_err(From::from).and_then(|mut r| Slack::deserialize::<T>(&mut r))
+        request.send().map_err(From::from).and_then(|mut r| deserialize::<T>(&mut r))
     }
+}
 
-    //
-    // helpers
-    //
+fn deserialize<T>(response: &mut Response) -> Result<T> where T: Deserialize {
+    let content_length = response.headers
+        .get::<ContentLength>()
+        .map_or(DEFAULT_RESPONSE_CONTENT_LENGTH, |c| { let ContentLength(length) = *c; length as usize });
+    let mut body = String::with_capacity(content_length);
+    try!(response.read_to_string(&mut body));
+    serde_json::from_str::<T>(&body).map_err(From::from)
+}
 
-    fn deserialize<T>(response: &mut Response) -> Result<T> where T: Deserialize {
-        let content_length = response.headers
-            .get::<ContentLength>()
-            .map_or(DEFAULT_RESPONSE_CONTENT_LENGTH, |c| { let ContentLength(length) = *c; length as usize });
-        let mut body = String::with_capacity(content_length);
-        try!(response.read_to_string(&mut body));
-        serde_json::from_str::<T>(&body).map_err(From::from)
+fn validate_channel_id(channel: &ChannelId) -> Result<()> {
+    match channel.chars().next() {
+        Some('C') | Some('D') | Some('G') => Ok(()),
+        _ => Err(ErrorKind::InvalidChannelId.into())
+    }
+}
+
+fn validate_user_id(user: &UserId) -> Result<()> {
+    match user.chars().next() {
+        Some('U') => Ok(()),
+        _ => Err(ErrorKind::InvalidUserId.into())
     }
 }

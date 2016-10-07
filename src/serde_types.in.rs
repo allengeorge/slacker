@@ -143,6 +143,126 @@ pub struct ChannelsListResponse {
     pub channels: Vec<Channel>, // there'll be at least one: #general
 }
 
+/// Actual response received from a channels.mark call.
+///
+/// See [Slack channels.mark Method (Response)](https://api.slack.com/methods/channels.mark "Slack channels.mark Method (Response)")
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ChannelsMarkResponse {
+    /// `true` if the request was successful, `false` otherwise.
+    pub ok: bool,
+    /// Only populated if there is an error.
+    pub error: Option<String>,
+    /// Only populated if there is a warning.
+    pub warning: Option<String>,
+}
+
+/// Actual response received from a channels.rename call.
+///
+/// See [Slack channels.rename Method (Response)](https://api.slack.com/methods/channels.rename "Slack channels.rename Method (Response)")
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ChannelsRenameResponse {
+    /// `true` if the request was successful, `false` otherwise.
+    pub ok: bool,
+    /// Only populated if there is an error.
+    pub error: Option<String>,
+    /// Only populated if there is a warning.
+    pub warning: Option<String>,
+    /// New (limited) state of the channel.
+    pub channel: Option<RenamedChannel>,
+}
+
+///  Limited representation of a channel after a `channels.rename` call.
+///
+/// See [Slack channels.rename Method (Response)](https://api.slack.com/methods/channels.rename "Slack channels.rename Method (Response)")
+#[derive(Serialize, Deserialize, Debug)]
+pub struct RenamedChannel {
+    /// Unique ID of the channel.
+    pub id: ChannelId,
+    /// `true` if this is a channel, `false` if it's a DM or a group chat.
+    pub is_channel: bool,
+    /// Human-readable channel name.
+    pub name: String,
+    /// Time at which the channel was created.
+    pub created: u32,
+}
+
+/// Actual response received from a channels.setPurpose call.
+///
+/// See [Slack channels.setPurpose Method (Response)](https://api.slack.com/methods/channels.setPurpose "Slack channels.setPurpose Method (Response)")
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ChannelsSetPurposeResponse {
+    /// `true` if the request was successful, `false` otherwise.
+    pub ok: bool,
+    /// Only populated if there is an error.
+    pub error: Option<String>,
+    /// Only populated if there is a warning.
+    pub warning: Option<String>,
+    /// New purpose for this channel.
+    pub purpose: Option<String>,
+}
+
+/// Actual response received from a channels.setTopic call.
+///
+/// See [Slack channels.setTopic Method (Response)](https://api.slack.com/methods/channels.setTopic "Slack channels.setTopic Method (Response)")
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ChannelsSetTopicResponse {
+    /// `true` if the request was successful, `false` otherwise.
+    pub ok: bool,
+    /// Only populated if there is an error.
+    pub error: Option<String>,
+    /// Only populated if there is a warning.
+    pub warning: Option<String>,
+    /// New topic for this channel.
+    pub topic: Option<String>,
+}
+
+/// Actual response received from a channels.unarchive call.
+///
+/// See [Slack channels.unarchive Method (Response)](https://api.slack.com/methods/channels.unarchive "Slack channels.unarchive Method (Response)")
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ChannelsUnarchiveResponse {
+    /// `true` if the request was successful, `false` otherwise.
+    pub ok: bool,
+    /// Only populated if there is an error.
+    pub error: Option<String>,
+    /// Only populated if there is a warning.
+    pub warning: Option<String>,
+}
+
+/// Actual response received from a chat.delete call.
+///
+/// See [Slack chat.delete Method (Response)](https://api.slack.com/methods/chat.delete "Slack chat.delete Method (Response)")
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ChatDeleteResponse {
+    /// `true` if the request was successful, `false` otherwise.
+    pub ok: bool,
+    /// Only populated if there is an error.
+    pub error: Option<String>,
+    /// Only populated if there is a warning.
+    pub warning: Option<String>,
+    /// Channel from which the message was deleted if the request was successful.
+    pub channel: Option<ChannelId>,
+    /// Timestamp of the deleted message if the request was successful.
+    pub ts: Option<f64>,
+}
+
+/// Actual response received from a chat.meMessage call.
+///
+/// See [Slack chat.meMessage Method (Response)](https://api.slack.com/methods/chat.meMessage "Slack chat.meMessage Method (Response)")
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ChatMeMessageResponse {
+    /// `true` if the request was successful, `false` otherwise.
+    pub ok: bool,
+    /// Only populated if there is an error.
+    pub error: Option<String>,
+    /// Only populated if there is a warning.
+    pub warning: Option<String>,
+    /// Channel to which the me-message was posted if the request was successful.
+    pub channel: Option<ChannelId>,
+    /// Timestamp of the me-message if the request was successful.
+    pub ts: Option<f64>,
+}
+
 // Actual response received from a chat.postMessage call.
 ///
 /// See [Slack chat.postMessage Method (Response)](https://api.slack.com/methods/chat.postMessage "Slack chat.postMessage Method (Response)")

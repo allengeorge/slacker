@@ -15,12 +15,9 @@
 use hyper;
 use std::ops::Deref;
 
-// TODO: verify ChannelId
-// TODO: verify UserId
-
 /// Type alias for a unique Slack channel id.
 /// (Note that this is *not* the channel's display name.)
-pub type ChannelId = String; // TODO: should this be an enum?
+pub type ChannelId = String;
 
 /// Type alias for a unique Slack user id.
 /// (Note that this is *not* the user's display name.)
@@ -28,9 +25,8 @@ pub type UserId = String;
 
 /// Wrapper over hyper::Url.
 ///
-/// Implementation note: Done because
-/// we can't implement a trait for a type
-/// where both the trait and type are
+/// Implementation note: Done because we can't implement
+/// a trait for a type where both the trait and type are
 /// defined in external crates.
 #[derive(Debug)]
 pub struct SlackUrl(pub hyper::Url);

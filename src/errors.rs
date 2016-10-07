@@ -66,6 +66,16 @@ error_chain! {
             description("user not found")
             display("slack api method specified an invalid user")
         }
+        /// Invalid Slack channel id.
+        InvalidChannelId {
+            description("invalid slack channel id")
+            display("slack channel id is missing initial identifier or is malformed")
+        }
+        /// Invalid Slack user id.
+        InvalidUserId {
+            description("invalid slack user id")
+            display("slack user id is missing initial identifier or is malformed")
+        }
         /// Argument name is too long or contains invalid characters.
         InvalidMethodArg {
             description("slack api method argument is malformed")
@@ -168,6 +178,37 @@ error_chain! {
             description("cannot leave the '#general' channel")
             display("cannot leave the '#general' channel")
         }
+        /// Invalid timestamp passed in to slack API method call.
+        InvalidTimestamp {
+            description("invalid timestamp")
+            display("invalid timestamp passed to slack API method")
+        }
+        /// Channel purpose or topic exceeded 250 characters.
+        ChannelPurposeOrTopicTooLong {
+            description("purpose or topic too long")
+            display("channel purpose or topic exceeded 250 characters")
+        }
+        /// Channel is not archived and so, cannot be unarchived.
+        ChannelNotArchived {
+            description("channel not archived")
+            display("channel not archived, so cannot be unarchived")
+        }
+        /// Message to be deleted/modified cannot be found.
+        MessageNotFound {
+            description("message not found")
+            display("message to be modified or deleted cannot be found")
+        }
+        /// Compliance exports are enabled, preventing message deletion.
+        /// User does not have permissions to delete the message.
+        UserCannotDeleteMessage {
+            description("user cannot delete message")
+            display("user does not have permissions to delete the message")
+        }
+        /// Compliance exports are enabled, preventing message deletion.
+        ComplianceExportsPreventDeletion {
+            description("compliance exports prevent message deletion")
+            display("compliance exports are enabled, and prevent message deletion")
+        }
         /// No message text.
         NoMessageContent {
             description("no message content")
@@ -231,6 +272,12 @@ pub fn from_api_error_string(error_string: &String) -> Error {
         "last_ra_channel" => ErrorKind::CannotArchiveLastRestrictedActionChannel,
         "channel_not_found" => ErrorKind::ChannelNotFound,
         "cant_leave_general" => ErrorKind::CannotLeaveGeneralChannel,
+        "invalid_timestamp" => ErrorKind::InvalidTimestamp,
+        "too_long" => ErrorKind::ChannelPurposeOrTopicTooLong,
+        "not_archived" => ErrorKind::ChannelNotArchived,
+        "message_not_found" => ErrorKind::MessageNotFound,
+        "cant_delete_message" => ErrorKind::UserCannotDeleteMessage,
+        "compliance_exports_prevent_deletion" => ErrorKind::ComplianceExportsPreventDeletion,
         "msg_too_long" => ErrorKind::MessageTooLong,
         "no_text" => ErrorKind::MessageHasNoText,
         "too_many_attachments" => ErrorKind::MessageHasTooManyAttachments,
